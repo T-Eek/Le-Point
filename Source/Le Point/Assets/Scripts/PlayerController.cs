@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
 
     void SetCountText()
     {
-        countText.text = "Count: " + count.ToString();
+        countText.text = "Score: " + count.ToString();
     }
 
     // Update is called once per frame

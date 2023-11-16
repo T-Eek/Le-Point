@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RayCastController : MonoBehaviour
 {
     Camera cam;
     public Color rayColor = Color.red; // Set the desired color for the ray
-    public float mousePosZ = 10f; // Set the desired value for mousePos.z
+    public float mousePosZ = 10000f; // Set the desired value for mousePos.z
     public float rayLength = 100f;
+    public LayerMask mask;
 
     // Start is called before the first frame update
     void Start()
@@ -27,12 +29,6 @@ public class RayCastController : MonoBehaviour
 
     public void HandleRaycast(LayerMask mask)
     {
-        // Draw Ray
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = mousePosZ;
-        mousePos = cam.ScreenToWorldPoint(mousePos);
-        Debug.DrawRay(transform.position, mousePos - transform.position, rayColor);
-
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
