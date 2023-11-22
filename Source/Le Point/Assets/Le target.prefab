@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 58361917000285351}
   - component: {fileID: 58361917000285350}
   m_Layer: 0
-  m_Name: TheDot
+  m_Name: Le target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

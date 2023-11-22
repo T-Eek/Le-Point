@@ -248,7 +248,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Count Text
+  m_text: 'Score:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -668,7 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b0e9e3978818fb49b4bc62ad3ffcee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TheDot: {fileID: 508975989}
+  Object: {fileID: 508975989}
   xPos: 0
   yPos: 0
   dotCount: 0
@@ -817,7 +817,7 @@ PrefabInstance:
     - target: {fileID: 58361917000285345, guid: 9a1614678f5c6e34a9125966afd92b49,
         type: 3}
       propertyPath: m_Name
-      value: Cube
+      value: Le Target
       objectReference: {fileID: 0}
     - target: {fileID: 58361917000285345, guid: 9a1614678f5c6e34a9125966afd92b49,
         type: 3}
