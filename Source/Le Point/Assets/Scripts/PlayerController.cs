@@ -9,8 +9,6 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
 
-    public TextMeshProUGUI countText;
-    private int count;
     Camera cam;
     private RayCastController rayCastController; // Reference to RayCastController
     public LayerMask mask;
@@ -23,24 +21,15 @@ public class PlayerController : MonoBehaviour
     {
         rayCastController = GetComponent<RayCastController>(); // Get the reference to RayCastController
         cam = Camera.main;
-        count = 0;
-
-        SetCountText();
     }
 
     IEnumerator DeactivateObjectAfterDelay(GameObject obj)
     {
         yield return new WaitForSeconds(deactivationDelay);
         obj.SetActive(false);
-        SetCountText();
         spawnerManager.OnObjectHit(); // Inform the ObjectSpawnerManager that an object was hit & spawns a new object
         Debug.Log(obj.name + " is hit successfully");
 
-    }
-
-    void SetCountText()
-    {
-        countText.text = "Score: " + count.ToString();
     }
 
     // Update is called once per frame
@@ -69,7 +58,7 @@ public class PlayerController : MonoBehaviour
                             if (hit.transform.gameObject.CompareTag("Clicked"))
                             {
                                 StartCoroutine(DeactivateObjectAfterDelay(hit.transform.gameObject));
-                                count++;
+                                ScoreManager.scoreCount++;
                             }
                         }
                     }
