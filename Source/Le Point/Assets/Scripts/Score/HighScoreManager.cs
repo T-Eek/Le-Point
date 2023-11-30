@@ -9,6 +9,8 @@ public class HighScoreManager : MonoBehaviour
 
     public static int hiScoreCount; // Expose this variable to the Unity Editor
 
+    private bool shouldResetHighScore = false; // Set this to true when you want to reset the high score
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -23,10 +25,16 @@ public class HighScoreManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-
-        if(ScoreManager.scoreCount > hiScoreCount)
+        //Checks if shouldResetHighScore is true, then resets the high score
+        if (shouldResetHighScore)
         {
-            hiScoreCount = ScoreManager.scoreCount;
+            ResetHighScore();// Method to reset the high score
+            shouldResetHighScore = false;
+        }
+        //Link between HighScoreManager and ScoreManager for the hiScoreCount
+        else if (ScoreManager.scoreCount > hiScoreCount)//Gets te ScoreManager scorecount 
+        {
+            hiScoreCount = ScoreManager.scoreCount; //Gets the scoreCount from script ScoreManager
             PlayerPrefs.SetInt("HighScore", hiScoreCount);
         }
         UpdateScore();
@@ -38,5 +46,11 @@ public class HighScoreManager : MonoBehaviour
     {
         // Update UI text
         hiScoreText.text = "Hi-Score: " + hiScoreCount;
+    }
+
+    public void ResetHighScore()
+    {
+        hiScoreCount = 0;
+        UpdateScore();
     }
 }

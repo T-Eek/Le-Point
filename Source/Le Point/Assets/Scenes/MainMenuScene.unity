@@ -911,6 +911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hiScoreText: {fileID: 1696253346}
+  resetHighScore: 1
 --- !u!1 &811713379
 GameObject:
   m_ObjectHideFlags: 0
