@@ -44,8 +44,8 @@ public class HighScoreManager : MonoBehaviour
 
     void UpdateScore()
     {
-        // Update UI text
-        hiScoreText.text = "Hi-Score: " + hiScoreCount;
+        // Update UI text only if hiScoreCount is not default value (0)
+        hiScoreText.text = hiScoreCount != default(int) ? "Hi-Score: " + hiScoreCount : "";
     }
 
     public void ResetHighScore()

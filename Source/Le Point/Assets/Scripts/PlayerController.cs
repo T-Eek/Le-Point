@@ -21,6 +21,18 @@ public class PlayerController : MonoBehaviour
     {
         rayCastController = GetComponent<RayCastController>(); // Get the reference to RayCastController
         cam = Camera.main;
+        GameStateManager.Instance.OnGameStateChanged += OnGameStateChanged;
+    }
+
+    void OnDestroy()
+    {
+        //prevent memory leaks and errors after it being destroyed
+        GameStateManager.Instance.OnGameStateChanged -= OnGameStateChanged;
+    }
+
+    private void OnGameStateChanged(GameState newGameState)
+    {
+        enabled = newGameState == GameState.Gameplay;
     }
 
     IEnumerator DeactivateObjectAfterDelay(GameObject obj)
@@ -66,6 +78,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+
 }
 
 
