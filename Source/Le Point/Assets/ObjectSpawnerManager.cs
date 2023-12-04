@@ -8,7 +8,7 @@ public class ObjectSpawnerManager : MonoBehaviour
     public int xPos;
     public int yPos;
 
-    public int dotCount;
+    public int pointCount;
     public int maxObjects = 5; // Maximum number of spawned objects allowed
 
     private Transform objectsContainer; // Container to store spawned objects (set in the Unity Editor)
@@ -20,7 +20,7 @@ public class ObjectSpawnerManager : MonoBehaviour
         objectsContainer = new GameObject("LeTargetContainer").transform; // Create a new GameObject as the container
 
         // Start spawning objects
-        StartCoroutine(TargetDrop());
+        StartCoroutine(TargetDrop()); // the start of the Coroutine
     }
 
     private void Update()
@@ -28,11 +28,11 @@ public class ObjectSpawnerManager : MonoBehaviour
         //
     }
 
-    IEnumerator TargetDrop()
+    IEnumerator TargetDrop() // the coroutine itself
     {
         while (true) // Infinite loop to keep spawning objects
         {
-            if (dotCount < maxObjects)
+            if (pointCount < maxObjects)
             {
                 xPos = Random.Range(-3, 3);
                 yPos = Random.Range(2, 6);
@@ -42,8 +42,8 @@ public class ObjectSpawnerManager : MonoBehaviour
                 // Set the container as the parent of the spawned object
                 spawnedObject.transform.parent = objectsContainer;
 
-                dotCount++;
-                Debug.Log("Spawned: Le Target" + Object + dotCount + " at position: " + spawnPosition);
+                pointCount++;
+                Debug.Log("Spawned: Le Target" + Object + pointCount + " at position: " + spawnPosition);
             }
             yield return new WaitForSeconds(0.5f); // Delay between object spawns
         }
@@ -52,9 +52,9 @@ public class ObjectSpawnerManager : MonoBehaviour
     // Call this method when the player interacts with an object
     public void OnObjectHit()
     {
-        if (dotCount > 0)
+        if (pointCount > 0)
         {
-            dotCount--;
+            pointCount--;
         }
     }
 }
