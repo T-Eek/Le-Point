@@ -33,7 +33,7 @@ public class ObjectSpawnerManager : MonoBehaviour
     {
         while (true) // Infinite loop to keep spawning objects
         {
-            if (pointCount < maxObjects)
+            if (pointCount < maxObjects && GameStateManager.Instance.CurrentGameState == GameState.Gameplay)
             {
                 xPos = Random.Range(-3, 3);
                 yPos = Random.Range(4, 8);
