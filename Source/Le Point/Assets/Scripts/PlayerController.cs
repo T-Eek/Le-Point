@@ -4,7 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 //using UnityEngine.InputSystem;
 using TMPro;
-//using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private RayCastController rayCastController; // Reference to RayCastController
     public LayerMask mask;
     public ObjectSpawnerManager spawnerManager; // Reference to ObjectSpawnerManager
+    public GameObject pauseScreen; // Reference to PauseScreen GameObject
 
     private float deactivationDelay = 0.2f; // Adjust the delay duration as needed
 
@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     {
         rayCastController = GetComponent<RayCastController>(); // Get the reference to RayCastController
         cam = Camera.main;
+
         GameStateManager.Instance.OnGameStateChanged += OnGameStateChanged;
     }
 
@@ -28,11 +29,22 @@ public class PlayerController : MonoBehaviour
     {
         //prevent memory leaks and errors after it being destroyed
         GameStateManager.Instance.OnGameStateChanged -= OnGameStateChanged;
+
+
     }
 
     private void OnGameStateChanged(GameState newGameState)
     {
         enabled = newGameState == GameState.Gameplay;
+        
+        if (newGameState == GameState.Gameplay)
+        {
+            EnablePlayerControls();
+        }
+        else if (newGameState == GameState.Paused)
+        {
+            DisablePlayerControls();
+        }
     }
 
     IEnumerator DeactivateObjectAfterDelay(GameObject obj)
@@ -79,6 +91,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void EnablePlayerControls()
+    {
+        enabled = true;
+    }
+
+    private void DisablePlayerControls()
+    {
+        enabled = false;
+    }
 
 }
 
