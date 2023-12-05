@@ -7,6 +7,7 @@ public class ObjectSpawnerManager : MonoBehaviour
     public GameObject Object; // The object prefab to spawn
     public int xPos;
     public int yPos;
+    public int zPos;
 
     public int pointCount;
     public int maxObjects = 5; // Maximum number of spawned objects allowed
@@ -32,11 +33,12 @@ public class ObjectSpawnerManager : MonoBehaviour
     {
         while (true) // Infinite loop to keep spawning objects
         {
-            if (pointCount < maxObjects)
+            if (pointCount < maxObjects && GameStateManager.Instance.CurrentGameState == GameState.Gameplay)
             {
                 xPos = Random.Range(-3, 3);
                 yPos = Random.Range(2, 6);
-                Vector3 spawnPosition = new Vector3(xPos, yPos, 11);
+                zPos = Random.Range(3, 6);
+                Vector3 spawnPosition = new Vector3(xPos, yPos, zPos);
                 GameObject spawnedObject = Instantiate(Object, spawnPosition, Quaternion.identity);
 
                 // Set the container as the parent of the spawned object
