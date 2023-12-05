@@ -18,28 +18,16 @@ public class MouseLookAround : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Check if player controls are enabled (not in pause state)
-        if (IsPlayerControlsEnabled())
-        {
-            // get the mouse input
-            float cameraX = Input.GetAxis("Mouse X") * mouseSensitivity;
-            float cameraY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+        // get the mouse input
+        float cameraX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float cameraY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-            // rotate the camera around the local X Axis
-            cameraVerticalRotation -= cameraY;
-            cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
-            transform.localEulerAngles = Vector3.right * cameraVerticalRotation;
+        // rotate the camera around the local X Axis
+        cameraVerticalRotation -= cameraY;
+        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
+        transform.localEulerAngles = Vector3.right * cameraVerticalRotation;
 
-            // rotate the camera around the local Y Axis
-            player.Rotate(Vector3.up * cameraX);
-        }
-    }
-
-    // Function to check if player controls are enabled
-    private bool IsPlayerControlsEnabled()
-    {
-        // Check the game state or any other condition
-        // You may need to adjust this based on your specific implementation
-        return GameStateManager.Instance.CurrentGameState == GameState.Gameplay;
+        // rotate the camera around the local Y Axis
+        player.Rotate(Vector3.up * cameraX);
     }
 }
