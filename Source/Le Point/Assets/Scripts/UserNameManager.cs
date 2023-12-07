@@ -24,7 +24,7 @@ public class UserNameManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(username))
         {
-            username = "Quest";
+            username = "";
             // You can show a notification here or take other appropriate actions for an empty username.
         }
 
@@ -37,7 +37,7 @@ public class UserNameManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(newUsername))
         {
-            newUsername = "Quest";
+            newUsername = "";
             // You can show a notification here or take other appropriate actions for an empty username.
         }
 
@@ -60,7 +60,7 @@ public class UserNameManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(storedUsername))
         {
-            storedUsername = "Quest";
+            storedUsername = "User";
             PlayerPrefs.SetString("Username", storedUsername); // Save the default username to PlayerPrefs
         }
 

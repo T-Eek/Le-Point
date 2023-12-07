@@ -33,7 +33,7 @@ public class HighScoreManager : MonoBehaviour
             shouldResetHighScore = false;
         }
         // Link between HighScoreManager and ScoreManager for the hiScoreCount
-        else if (ScoreManager.scoreCount > hiScoreCount)// Gets the ScoreManager scorecount 
+        if (ScoreManager.scoreCount > hiScoreCount)// Gets the ScoreManager scorecount 
         {
             hiScoreCount = ScoreManager.scoreCount; // Gets the scoreCount from script ScoreManager
             PlayerPrefs.SetInt("HighScore", hiScoreCount);

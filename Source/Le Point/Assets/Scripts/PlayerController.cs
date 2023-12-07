@@ -40,7 +40,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(deactivationDelay);
         obj.SetActive(false);
         spawnerManager.OnObjectHit(); // Inform the ObjectSpawnerManager that an object was hit & spawns a new object
-        Debug.Log(obj.name + " is hit successfully");
 
     }
 
@@ -71,6 +70,8 @@ public class PlayerController : MonoBehaviour
                             {
                                 StartCoroutine(DeactivateObjectAfterDelay(hit.transform.gameObject));
                                 ScoreManager.scoreCount++;
+                                spawnerManager.OnObjectHit();
+                                // Debug.Log(obj.name + " is hit successfully");
                             }
                         }
                     }
