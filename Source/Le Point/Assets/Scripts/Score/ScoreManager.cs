@@ -8,7 +8,6 @@ using UnityEngine.SceneManagement;
 public class ScoreManager : MonoBehaviour
 {
     public TextMeshProUGUI scoreText;
-    public GameObject GameOverScreen;
 
     public static int scoreCount;
 
