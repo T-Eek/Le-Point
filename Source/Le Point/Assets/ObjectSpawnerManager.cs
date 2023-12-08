@@ -13,7 +13,7 @@ public class ObjectSpawnerManager : MonoBehaviour
     public int maxObjectsTargetM = 5; // Maximum number of spawned objects for TargetM
     public int maxObjectsTargetS = 2; // Maximum number of spawned objects for TargetS
     public float spawnDelay = 0.5f; // Initial default spawn delay
-    private float decayTime = 3.01f; // Time before spawned objects are destroyed
+    public float decayTime = 3.01f; // Time before spawned objects are destroyed
 
     private Transform objectsContainer; // Container to store spawned objects (set in the Unity Editor)
     private int targetCount;
@@ -30,6 +30,11 @@ public class ObjectSpawnerManager : MonoBehaviour
 
         // Start spawning objects
         StartCoroutine(TargetDrop());
+    }
+
+    private void Update()
+    {
+        //
     }
 
     IEnumerator TargetDrop()

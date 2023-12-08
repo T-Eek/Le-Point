@@ -9,7 +9,7 @@ public class HighScoreManager : MonoBehaviour
 
     public static int hiScoreCount; // Expose this variable to the Unity Editor
 
-    private bool shouldResetHighScore = false; // Set this to true when you want to reset the high score
+    private bool shouldResetHighScore = true; // Set this to true when you want to reset the high score
 
     // Start is called before the first frame update
     void Start()
