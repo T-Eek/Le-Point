@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObjectSpawnerManager : MonoBehaviour
 {
+
+    
     public GameObject TargetL; // The object prefab to spawn initially
     public GameObject TargetM; // The object prefab to spawn after reaching a score of 25
     public GameObject TargetS; // The object prefab to spawn after reaching a score of 50
@@ -15,6 +17,9 @@ public class ObjectSpawnerManager : MonoBehaviour
 
     private Transform objectsContainer; // Container to store spawned objects (set in the Unity Editor)
     private int targetCount;
+    public GameObject GameOverScreen;
+
+    private float maxObjectsTimer = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -31,46 +36,64 @@ public class ObjectSpawnerManager : MonoBehaviour
     {
         while (true)
         {
-            if (targetCount < maxObjects && GameStateManager.Instance.CurrentGameState == GameState.Gameplay)
+            if (GameStateManager.Instance.CurrentGameState == GameState.Gameplay)
             {
-                // Get a random position within the specified range
-                Vector3 spawnPosition = GetRandomSpawnPosition();
-
-                // Determine the object to spawn based on the player's score
-                GameObject spawnedObject = GetSpawnedObject();
-
-                // Instantiate and set the container as the parent
-                GameObject instantiatedObject = Instantiate(spawnedObject, spawnPosition, Quaternion.identity);
-                instantiatedObject.transform.parent = objectsContainer;
-
-                targetCount++;
-                Debug.Log($"Spawned: {spawnedObject.name} {""} {targetCount} at position: {spawnPosition}");
-
-
-                // Change spawn delay based on the spawned object
-                if (spawnedObject == TargetM)
+                if (targetCount < maxObjects)
                 {
-                    spawnDelay = 2.5f;
-                    StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
-                }
-                else if (spawnedObject == TargetS)
-                {
-                    spawnDelay = 5f;
-                    StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
-                }
-                else
-                {
-                    spawnDelay = 1f; // Reset to default if spawning TargetL
-                    StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
+                    // Get a random position within the specified range
+                    Vector3 spawnPosition = GetRandomSpawnPosition();
+
+                    // Determine the object to spawn based on the player's score
+                    GameObject spawnedObject = GetSpawnedObject();
+
+                    // Instantiate and set the container as the parent
+                    GameObject instantiatedObject = Instantiate(spawnedObject, spawnPosition, Quaternion.identity);
+                    instantiatedObject.transform.parent = objectsContainer;
+
+                    targetCount++;
+                    Debug.Log($"Spawned: {spawnedObject.name} {""} {targetCount} at position: {spawnPosition}");
+
+
+                    // Change spawn delay based on the spawned object
+                    if (spawnedObject == TargetM)
+                    {
+                        spawnDelay = 2.5f;
+                        StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
+
+                    }
+                    else if (spawnedObject == TargetS)
+                    {
+                        spawnDelay = 5f;
+                        StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
+                    }
+                    else
+                    {
+                        spawnDelay = 1f; // Reset to default if spawning TargetL
+                        StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
+                    }
                 }
             }
-
             yield return new WaitForSeconds(spawnDelay);
+            // Update maxObjectsTimer if maxObjects is reached
+            if (targetCount == maxObjects)
+            {
+                maxObjectsTimer += spawnDelay;
+                if (maxObjectsTimer >= 5f)
+                {
+                    GameOverScreen.SetActive(true);
+                    yield break; // exit the coroutine
+                }
+            }
+            else
+            {
+                maxObjectsTimer = 0f; // Reset the timer if targetCount is less than maxObjects
+            }
         }
     }
 
     IEnumerator DestroyAfterDelay(GameObject target, float delay)
     {
+
         Renderer targetRenderer = target.GetComponent<Renderer>();
 
         // Change to custom color (#FF5733) for the first second

@@ -21,7 +21,10 @@ public class MainMenuController : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(1);
     }
-
+    public void GameOGame()
+    {
+        SceneManager.LoadScene("MainMenuScene");
+    }
     public void Quitgame() 
     {
         Debug.Log("Quitting the Le Point...");
