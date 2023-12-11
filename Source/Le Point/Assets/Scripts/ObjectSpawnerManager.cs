@@ -16,6 +16,7 @@ public class ObjectSpawnerManager : MonoBehaviour
     public float decayTime = 3.01f; // Time before spawned objects are destroyed
 
     private Transform objectsContainer; // Container to store spawned objects (set in the Unity Editor)
+    public GameObject TargetArea; // Add this field in the Unity Editor
     private int targetCount;
     public GameObject GameOverScreen;
 
