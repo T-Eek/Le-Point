@@ -1,0 +1,34 @@
+{
+    "name": "LePointInput",
+    "maps": [
+        {
+            "name": "General",
+            "id": "7ca41bbf-4ad0-412a-8d59-fbce4425edfe",
+            "actions": [
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "2ca06cdd-94a6-43ad-9e58-1737a4dcd957",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "799b5002-2239-48b4-8b1d-485cf556e3ad",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
