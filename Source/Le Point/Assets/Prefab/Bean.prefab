@@ -159,7 +159,7 @@ MonoBehaviour:
   groundCheck: {fileID: 69958370844860462}
   ground:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   jumpHeight: 1
 --- !u!1 &6088272966588139172
 GameObject:
