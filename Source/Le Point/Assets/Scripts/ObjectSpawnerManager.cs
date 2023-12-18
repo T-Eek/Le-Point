@@ -16,7 +16,7 @@ public class ObjectSpawnerManager : MonoBehaviour
     public float decayTime = 3.01f; // Time before spawned objects are destroyed
 
     private Transform objectsContainer; // Container to store spawned objects (set in the Unity Editor)
-    public GameObject TargetArea; // Add this field in the Unity Editor
+    public GameObject spawnArea; // Add this field in the Unity Editor
     private int targetCount;
     public GameObject GameOverScreen;
 
@@ -46,8 +46,8 @@ public class ObjectSpawnerManager : MonoBehaviour
             {
                 if (targetCount < maxObjects)
                 {
-                    // Get a random position within the specified range
-                    Vector3 spawnPosition = GetRandomSpawnPosition();
+                    // Get a random position within the specified range using TargetArea from AreaSpawner
+                    Vector3 spawnPosition = AreaSpawner.Instance.TargetArea();
 
                     // Determine the object to spawn based on the player's score
                     GameObject spawnedObject = GetSpawnedObject();
@@ -119,15 +119,6 @@ public class ObjectSpawnerManager : MonoBehaviour
         {
             Destroy(target);
         }
-    }
-
-    Vector3 GetRandomSpawnPosition()
-    {
-        float xPos = Random.Range(-3, 3);
-        float yPos = Random.Range(4, 8);
-        float zPos = Random.Range(8, 2);
-
-        return new Vector3(xPos, yPos, zPos);
     }
 
     GameObject GetSpawnedObject()

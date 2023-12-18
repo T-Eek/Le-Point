@@ -4,26 +4,53 @@ using UnityEngine;
 
 public class AreaSpawner : MonoBehaviour
 {
+    public Vector3 center; // TargetArea parameters
+    public Vector3 size; // TargetArea parameters
+    public UnityEngine.Color gizmoColor = new UnityEngine.Color(0, 1, 0, 0.5f);
 
-    public Vector3 center;
-    public Vector3 size;
+    private static AreaSpawner instance;
 
-
+    // Singleton pattern to make the script accessible from other scripts
+    public static AreaSpawner Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<AreaSpawner>();
+            }
+            return instance;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
-        
+        TargetArea();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        //
     }
 
+    public Vector3 TargetArea()
+    {
+        return center + new Vector3(
+            Random.Range(-size.x / 2, size.x / 2),
+            Random.Range(-size.y / 2, size.y / 2),
+            Random.Range(-size.z / 2, size.z / 2)
+        );
+
+    }
+
+    // Add this method to get the Gizmo color
+    public UnityEngine.Color GetGizmoColor()
+    {
+        return gizmoColor;
+    }
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = new Color(2, 0, 0, 0.5f);
-        Gizmos.DrawCube(center, size);
+        Gizmos.color = GetGizmoColor();
+        Gizmos.DrawCube(transform.localPosition + center, size);
     }
 }
