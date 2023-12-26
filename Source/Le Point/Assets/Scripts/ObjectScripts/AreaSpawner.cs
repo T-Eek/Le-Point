@@ -8,10 +8,10 @@ public class AreaSpawner : MonoBehaviour
     public Vector3 size; // TargetArea parameters
     public UnityEngine.Color gizmoColor = new UnityEngine.Color(0, 1, 0, 0.5f);
 
-    private static AreaSpawner instance;
+    private static AreaSpawner instance; // allows you to connnect other script to it
 
     // Singleton pattern to make the script accessible from other scripts
-    public static AreaSpawner Instance
+    public static AreaSpawner Instance // An instance to ObjectSpawnerManager
     {
         get
         {
@@ -26,6 +26,8 @@ public class AreaSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        center = transform.localPosition; // Is set to  the spawnArea GameObject / can be changed in the editor if needed
         TargetArea();
     }
 

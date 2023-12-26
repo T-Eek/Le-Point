@@ -6,17 +6,19 @@ public class ObjectSpawnerManager : MonoBehaviour
 {
 
     
-    public GameObject TargetL; // The object prefab to spawn initially
+    public GameObject TargetL; // The object prefab to spawn initially untile the next target spawns
     public GameObject TargetM; // The object prefab to spawn after reaching a score of 25
     public GameObject TargetS; // The object prefab to spawn after reaching a score of 50
-    public int maxObjects = 5; // Default maximum number of spawned objects
-    public int maxObjectsTargetM = 5; // Maximum number of spawned objects for TargetM
-    public int maxObjectsTargetS = 2; // Maximum number of spawned objects for TargetS
-    public float spawnDelay = 0.5f; // Initial default spawn delay
-    public float decayTime = 3.01f; // Time before spawned objects are destroyed
+    private int targetCount; // each target GameObject
+    public int maxObjects = 1; // Default maximum number of spawned objects
+    public static int maxObjectsTagetL = 10; // Maximum number of spawned objects for TargetL
+    public static int maxObjectsTargetM = 10; // Maximum number of spawned objects for TargetM
+    public static int maxObjectsTargetS = 5; // Maximum number of spawned objects for TargetS
+    private float spawnDelay = 0.5f; // Initial default spawn delay between the spawned target GameObjects
+    private float decayTime = 3.5f; // The set time when all target GameObjects are destoryed to show the Game Over Screen
+    public static float decayTargetTime = 1f; // The time before spawned objects are being destroyed
 
     private Transform objectsContainer; // Container to store spawned objects (set in the Unity Editor)
-    private int targetCount;
     public GameObject GameOverScreen;
 
     public GameObject spawnArea;
@@ -32,6 +34,13 @@ public class ObjectSpawnerManager : MonoBehaviour
 
         // Start spawning objects
         StartCoroutine(TargetDrop());
+
+        GameStateManager.Instance.OnGameStateChanged += onGameStateChanged;
+    }
+
+    private void OnDestroy()
+    {
+        GameStateManager.Instance.OnGameStateChanged -= onGameStateChanged;
     }
 
     private void Update()
@@ -64,18 +73,18 @@ public class ObjectSpawnerManager : MonoBehaviour
                     // Change spawn delay based on the spawned object
                     if (spawnedObject == TargetM)
                     {
-                        spawnDelay = 2.5f;
+                        spawnDelay = 0.8f;
                         StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
 
                     }
                     else if (spawnedObject == TargetS)
                     {
-                        spawnDelay = 5f;
+                        spawnDelay = 0.4f;
                         StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
                     }
                     else
                     {
-                        spawnDelay = 1f; // Reset to default if spawning TargetL
+                        spawnDelay = 1.5f; // Reset to default if spawning TargetL
                         StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
                     }
                 }
@@ -87,6 +96,7 @@ public class ObjectSpawnerManager : MonoBehaviour
                 maxObjectsTimer += spawnDelay;
                 if (maxObjectsTimer >= 5f)
                 {
+                    
                     GameOverScreen.SetActive(true);
                     yield break; // exit the coroutine
                 }
@@ -105,19 +115,29 @@ public class ObjectSpawnerManager : MonoBehaviour
 
         // Change to custom color (#FF5733) for the first second
         targetRenderer.material.color = ColorUtility.TryParseHtmlString("#FFFFFF", out Color targetColor1) ? targetColor1 : Color.white;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(spawnDelay);
 
         // Change to another custom color (#33FF57) for the second second
         targetRenderer.material.color = ColorUtility.TryParseHtmlString("#737373", out Color targetColor2) ? targetColor2 : Color.white;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(spawnDelay);
 
         // Change to another custom color (#5733FF) for the third second
         targetRenderer.material.color = ColorUtility.TryParseHtmlString("#393939", out Color targetColor3) ? targetColor3 : Color.white;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(spawnDelay);
 
-        // Check if the object is null before attempting to destroy it
+        // Check if the object is null before attempting to deactivate and destroy it
         if (target != null)
         {
+            target.SetActive(false);
+
+            // Start a coroutine to destroy the object after a delay of 1 second
+            StartCoroutine(DestroyObjectWithDelay(1f));
+        }
+
+        // Coroutine to destroy the object after a delay
+        IEnumerator DestroyObjectWithDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
             Destroy(target);
         }
     }
@@ -125,14 +145,14 @@ public class ObjectSpawnerManager : MonoBehaviour
     GameObject GetSpawnedObject()
     {
 
-        if (ScoreManager.scoreCount >= 50 && TargetS != null)
+        if (ScoreManager.scoreCount >= 20 && TargetS != null)
         {
             Debug.Log("Selected TargetS");
             maxObjects = maxObjectsTargetS; // Change maxObjects for TargetS
 
             return TargetS;
         }
-        else if (ScoreManager.scoreCount >= 30 && TargetM != null)
+        else if (ScoreManager.scoreCount >= 10 && TargetM != null)
         {
             Debug.Log("Selected TargetM");
             maxObjects = maxObjectsTargetM; // Change maxObjects for TargetM
@@ -141,7 +161,7 @@ public class ObjectSpawnerManager : MonoBehaviour
         else
         {
             Debug.Log("Selected TargetL");
-            maxObjects = 10; // Reset maxObjects to default for TargetL
+            maxObjects = maxObjectsTagetL; // Reset maxObjects of maxObjectsTargetL
             return TargetL;
         }
     }
@@ -153,5 +173,10 @@ public class ObjectSpawnerManager : MonoBehaviour
         {
             targetCount--;
         }
+    }
+
+    private void onGameStateChanged(GameState newGameState)
+    {
+        enabled = newGameState == GameState.Gameplay;
     }
 }

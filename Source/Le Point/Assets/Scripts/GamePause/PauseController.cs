@@ -15,7 +15,7 @@ public class PauseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             GameState currentGameState = GameStateManager.Instance.CurrentGameState;
             GameState newGameState = currentGameState == GameState.Gameplay
