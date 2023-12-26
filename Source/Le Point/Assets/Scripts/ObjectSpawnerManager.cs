@@ -16,9 +16,10 @@ public class ObjectSpawnerManager : MonoBehaviour
     public float decayTime = 3.01f; // Time before spawned objects are destroyed
 
     private Transform objectsContainer; // Container to store spawned objects (set in the Unity Editor)
-    public GameObject spawnArea; // Add this field in the Unity Editor
     private int targetCount;
     public GameObject GameOverScreen;
+
+    public GameObject spawnArea;
 
     private float maxObjectsTimer = 0f;
 
@@ -57,7 +58,7 @@ public class ObjectSpawnerManager : MonoBehaviour
                     instantiatedObject.transform.parent = objectsContainer;
 
                     targetCount++;
-                    Debug.Log($"Spawned: {spawnedObject.name} {""} {targetCount} at position: {spawnPosition}");
+                    //Debug.Log($"Spawned: {spawnedObject.name} {""} {targetCount} at position: {spawnPosition}");
 
 
                     // Change spawn delay based on the spawned object

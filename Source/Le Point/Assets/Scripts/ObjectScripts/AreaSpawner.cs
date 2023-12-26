@@ -19,6 +19,7 @@ public class AreaSpawner : MonoBehaviour
             {
                 instance = FindObjectOfType<AreaSpawner>();
             }
+            Debug.Log("Instance found");
             return instance;
         }
     }
@@ -35,12 +36,14 @@ public class AreaSpawner : MonoBehaviour
 
     public Vector3 TargetArea()
     {
-        return center + new Vector3(
+        Debug.Log("pos found");
+        Vector3 pos = center + new Vector3(
             Random.Range(-size.x / 2, size.x / 2),
             Random.Range(-size.y / 2, size.y / 2),
             Random.Range(-size.z / 2, size.z / 2)
         );
-
+        Debug.Log(pos);
+        return pos;
     }
 
     // Add this method to get the Gizmo color
@@ -51,6 +54,6 @@ public class AreaSpawner : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         Gizmos.color = GetGizmoColor();
-        Gizmos.DrawCube(transform.localPosition + center, size);
+        Gizmos.DrawCube(center, size);
     }
 }
