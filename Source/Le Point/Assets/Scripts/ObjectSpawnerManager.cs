@@ -22,6 +22,8 @@ public class ObjectSpawnerManager : MonoBehaviour
     public GameObject GameOverScreen;
 
     public GameObject spawnArea;
+    public GameObject spawnArea1;
+    public GameObject teleporter;
 
     private float maxObjectsTimer = 0f;
 
@@ -35,9 +37,11 @@ public class ObjectSpawnerManager : MonoBehaviour
         // Start spawning objects
         StartCoroutine(TargetDrop());
 
+        // Changes the GameState
         GameStateManager.Instance.OnGameStateChanged += onGameStateChanged;
     }
 
+        // Destroys the previous GameState
     private void OnDestroy()
     {
         GameStateManager.Instance.OnGameStateChanged -= onGameStateChanged;
@@ -56,11 +60,17 @@ public class ObjectSpawnerManager : MonoBehaviour
             {
                 if (targetCount < maxObjects)
                 {
-                    // Get a random position within the specified range using TargetArea from AreaSpawner
-                    Vector3 spawnPosition = AreaSpawner.Instance.TargetArea();
-
                     // Determine the object to spawn based on the player's score
                     GameObject spawnedObject = GetSpawnedObject();
+
+                    // If GetSpawnedObject returns null, stop spawning targets
+                    if (spawnedObject == null)
+                    {
+                        yield break;
+                    }
+
+                    // Get a random position within the specified range using TargetArea from AreaSpawner
+                    Vector3 spawnPosition = AreaSpawner.Instance.TargetArea();
 
                     // Instantiate and set the container as the parent
                     GameObject instantiatedObject = Instantiate(spawnedObject, spawnPosition, Quaternion.identity);
@@ -104,6 +114,7 @@ public class ObjectSpawnerManager : MonoBehaviour
             else
             {
                 maxObjectsTimer = 0f; // Reset the timer if targetCount is less than maxObjects
+                GameOverScreen.SetActive(false);
             }
         }
     }
@@ -144,7 +155,17 @@ public class ObjectSpawnerManager : MonoBehaviour
 
     GameObject GetSpawnedObject()
     {
+        if (ScoreManager.scoreCount >= 25)
+        {
+            Debug.Log("Score is 25 or higher, no targets will spawn.");
 
+            Debug.Log("Teleporter is active");
+            teleporter.SetActive(true); // Activate the teleporter
+
+            return null;
+        }
+
+        // Your existing logic for selecting targets based on score
         if (ScoreManager.scoreCount >= 20 && TargetS != null)
         {
             Debug.Log("Selected TargetS");
@@ -156,12 +177,17 @@ public class ObjectSpawnerManager : MonoBehaviour
         {
             Debug.Log("Selected TargetM");
             maxObjects = maxObjectsTargetM; // Change maxObjects for TargetM
+
             return TargetM;
         }
         else
         {
             Debug.Log("Selected TargetL");
             maxObjects = maxObjectsTagetL; // Reset maxObjects of maxObjectsTargetL
+
+            Debug.Log("Teleporter is not active");
+            teleporter.SetActive(false); // Deactivate the teleporter
+
             return TargetL;
         }
     }

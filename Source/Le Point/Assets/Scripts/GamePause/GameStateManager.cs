@@ -36,3 +36,5 @@ public class GameStateManager // Only want 1 across the hole game | singleton
         OnGameStateChanged?.Invoke(newGameState);
     }
 }
+
+//video https://www.youtube.com/watch?v=KPaEnLpu57s

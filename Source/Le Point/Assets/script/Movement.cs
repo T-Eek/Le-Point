@@ -28,7 +28,9 @@ public class Movement : MonoBehaviour
     Vector2 currentDir;
     Vector2 currentDirVelocity;
     Vector3 velocity;
- 
+
+    bool checksMovement = false; // Variable to track if movement is enabled
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -43,7 +45,48 @@ public class Movement : MonoBehaviour
     void Update()
     {
         UpdateMouse();
-        UpdateMove();
+
+        // Check the player's score and enable/disable movement accordingly
+        if (ScoreManager.scoreCount >= 25 && ScoreManager.scoreCount < 30)
+        {
+            checksMovement = true;
+        }
+        else if (ScoreManager.scoreCount >= 30 && ScoreManager.scoreCount < 50)
+        {
+            // Handle the movement for score between 30 and 50
+            checksMovement = true;
+        }
+        else if (ScoreManager.scoreCount >= 50 && ScoreManager.scoreCount < 55)
+        {
+            // Handle the movement for score between 50 and 55
+            checksMovement = true;
+        }
+        // Add more conditions for other score ranges as needed
+        else if (ScoreManager.scoreCount >= 55 && ScoreManager.scoreCount < 75)
+        {
+            // Handle the movement for score between 55 and 75
+            checksMovement = true;
+        }
+        else if (ScoreManager.scoreCount >= 75 && ScoreManager.scoreCount < 80)
+        {
+            // Handle the movement for score between 75 and 80
+            checksMovement = true;
+        }
+        else if (ScoreManager.scoreCount >= 80 && ScoreManager.scoreCount < 99)
+        {
+            // Handle the movement for score between 80 and 99
+            checksMovement = true;
+        }
+        else
+        {
+            // Disable movement for any other cases
+            checksMovement = false;
+        }
+
+        if (checksMovement)
+        {
+            UpdateMove();
+        }
     }
  
     void UpdateMouse()
@@ -64,28 +107,34 @@ public class Movement : MonoBehaviour
     void UpdateMove()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, ground);
- 
-        Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        targetDir.Normalize();
- 
-        currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);
- 
-        velocityY += gravity * 2f * Time.deltaTime;
- 
-        Vector3 velocity = (transform.forward * currentDir.y + transform.right * currentDir.x) * Speed + Vector3.up * velocityY;
- 
-        controller.Move(velocity * Time.deltaTime);
- 
-        if (isGrounded && Input.GetButtonDown("Jump"))
+
+        // Only proceed with movement if isMovementEnabled is true
+        if (checksMovement)
         {
-            velocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
- 
-        if(isGrounded! && controller.velocity.y < -1f)
-        {
-            velocityY = -8f;
+            Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            targetDir.Normalize();
+
+            currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);
+
+            velocityY += gravity * 2f * Time.deltaTime;
+
+            Vector3 velocity = (transform.forward * currentDir.y + transform.right * currentDir.x) * Speed + Vector3.up * velocityY;
+
+            controller.Move(velocity * Time.deltaTime);
+
+            if (isGrounded && Input.GetButtonDown("Jump"))
+            {
+                velocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
+
+            if (isGrounded! && controller.velocity.y < -1f)
+            {
+                velocityY = -8f;
+            }
         }
     }
 }
 
 //video https://www.youtube.com/watch?v=yl2Tv72tV7U
+
+// Movement check sourse: ChatGPT
