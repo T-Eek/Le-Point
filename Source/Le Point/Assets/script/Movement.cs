@@ -29,7 +29,7 @@ public class Movement : MonoBehaviour
     Vector2 currentDirVelocity;
     Vector3 velocity;
 
-    bool checksMovement = false; // Variable to track if movement is enabled
+    public static bool checksMovement = false; // Variable to track if movement is enabled
 
     void Start()
     {
@@ -47,51 +47,25 @@ public class Movement : MonoBehaviour
         UpdateMouse();
 
         // Check the player's score and enable/disable movement accordingly
-        if (ScoreManager.scoreCount >= 25 && ScoreManager.scoreCount < 30)
-        {
-            checksMovement = true;
-        }
-        else if (ScoreManager.scoreCount >= 30 && ScoreManager.scoreCount < 50)
-        {
-            // Handle the movement for score between 30 and 50
-            checksMovement = true;
-        }
-        else if (ScoreManager.scoreCount >= 50 && ScoreManager.scoreCount < 55)
-        {
-            // Handle the movement for score between 50 and 55
-            checksMovement = true;
-        }
-        // Add more conditions for other score ranges as needed
-        else if (ScoreManager.scoreCount >= 55 && ScoreManager.scoreCount < 75)
-        {
-            // Handle the movement for score between 55 and 75
-            checksMovement = true;
-        }
-        else if (ScoreManager.scoreCount >= 75 && ScoreManager.scoreCount < 80)
-        {
-            // Handle the movement for score between 75 and 80
-            checksMovement = true;
-        }
-        else if (ScoreManager.scoreCount >= 80 && ScoreManager.scoreCount < 99)
-        {
-            // Handle the movement for score between 80 and 99
-            checksMovement = true;
-        }
-        else
-        {
-            // Disable movement for any other cases
-            checksMovement = false;
-        }
-
         if (checksMovement)
         {
             UpdateMove();
         }
     }
- 
+
+    public void EnableMovement()
+    {
+        checksMovement = true;
+    }
+
+    public void DisableMovement()
+    {
+        checksMovement = false;
+    }
+
     void UpdateMouse()
     {
-        Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 targetMouseDelta = new(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
  
         currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
  
@@ -104,14 +78,14 @@ public class Movement : MonoBehaviour
         transform.Rotate(Vector3.up * currentMouseDelta.x * mouseSensitivity);
     }
  
-    void UpdateMove()
+    public void UpdateMove()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, ground);
 
         // Only proceed with movement if isMovementEnabled is true
         if (checksMovement)
         {
-            Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            Vector2 targetDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             targetDir.Normalize();
 
             currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);

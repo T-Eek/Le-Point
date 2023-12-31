@@ -1113,8 +1113,10 @@ MonoBehaviour:
   maxObjects: 1
   GameOverScreen: {fileID: 3402575156669731324}
   spawnArea: {fileID: 233384278}
-  spawnArea1: {fileID: 0}
+  spawnArea2: {fileID: 911733487}
+  spawnArea3: {fileID: 632042704}
   teleporter: {fileID: 978479084}
+  playerMovement: {fileID: 1150796513}
 --- !u!1001 &381070991
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1914,7 +1916,7 @@ GameObject:
   - component: {fileID: 632042706}
   - component: {fileID: 632042705}
   m_Layer: 0
-  m_Name: spawnArea2
+  m_Name: spawnArea3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2571,7 +2573,7 @@ GameObject:
   - component: {fileID: 911733489}
   - component: {fileID: 911733488}
   m_Layer: 0
-  m_Name: spawnArea1
+  m_Name: spawnArea2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3287,6 +3289,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1150796511}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1150796513 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7845416637109591201, guid: 09f7b86bab708484aba8addd3f01d71f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1150796511}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927363950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2759855867b3ae640aa1abfc42b4c465, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1157423271
 PrefabInstance:
   m_ObjectHideFlags: 0

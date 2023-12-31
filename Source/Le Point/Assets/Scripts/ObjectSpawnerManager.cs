@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class ObjectSpawnerManager : MonoBehaviour
 {
@@ -22,10 +23,13 @@ public class ObjectSpawnerManager : MonoBehaviour
     public GameObject GameOverScreen;
 
     public GameObject spawnArea;
-    public GameObject spawnArea1;
+    public GameObject spawnArea2;
+    public GameObject spawnArea3;
     public GameObject teleporter;
 
     private float maxObjectsTimer = 0f;
+
+    private Movement playerMovement;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +43,13 @@ public class ObjectSpawnerManager : MonoBehaviour
 
         // Changes the GameState
         GameStateManager.Instance.OnGameStateChanged += onGameStateChanged;
+
+        // Assuming the Movement script is on the player object
+        playerMovement = FindObjectOfType<Movement>();
+        if (playerMovement == null)
+        {
+            Debug.LogError("Movement script not found on player object.");
+        }
     }
 
         // Destroys the previous GameState
@@ -155,18 +166,24 @@ public class ObjectSpawnerManager : MonoBehaviour
 
     GameObject GetSpawnedObject()
     {
-        if (ScoreManager.scoreCount >= 25)
+        if (ScoreManager.scoreCount == 25 && TargetM != null)
         {
             Debug.Log("Score is 25 or higher, no targets will spawn.");
 
+            spawnArea.SetActive(false);
+            spawnArea2.SetActive(true);
+
             Debug.Log("Teleporter is active");
             teleporter.SetActive(true); // Activate the teleporter
+
+            // Enable player movement
+            playerMovement.EnableMovement();
 
             return null;
         }
 
         // Your existing logic for selecting targets based on score
-        if (ScoreManager.scoreCount >= 20 && TargetS != null)
+        if (ScoreManager.scoreCount >= 30 && TargetS != null)
         {
             Debug.Log("Selected TargetS");
             maxObjects = maxObjectsTargetS; // Change maxObjects for TargetS
@@ -182,11 +199,18 @@ public class ObjectSpawnerManager : MonoBehaviour
         }
         else
         {
+            spawnArea.SetActive(true);
             Debug.Log("Selected TargetL");
             maxObjects = maxObjectsTagetL; // Reset maxObjects of maxObjectsTargetL
 
             Debug.Log("Teleporter is not active");
             teleporter.SetActive(false); // Deactivate the teleporter
+
+            // Disable player movement
+            if (playerMovement != null)
+            {
+                playerMovement.DisableMovement();
+            }
 
             return TargetL;
         }
