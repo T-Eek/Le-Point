@@ -28,7 +28,9 @@ public class Movement : MonoBehaviour
     Vector2 currentDir;
     Vector2 currentDirVelocity;
     Vector3 velocity;
- 
+
+    public static bool checksMovement = true; // Variable to track if movement is enabled
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -43,12 +45,27 @@ public class Movement : MonoBehaviour
     void Update()
     {
         UpdateMouse();
-        UpdateMove();
+
+        // Check the player's score and enable/disable movement accordingly
+        if (checksMovement)
+        {
+            UpdateMove();
+        }
     }
- 
+
+    public void EnableMovement()
+    {
+        checksMovement = true;
+    }
+
+    public void DisableMovement()
+    {
+        checksMovement = false;
+    }
+
     void UpdateMouse()
     {
-        Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 targetMouseDelta = new(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
  
         currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
  
@@ -61,31 +78,37 @@ public class Movement : MonoBehaviour
         transform.Rotate(Vector3.up * currentMouseDelta.x * mouseSensitivity);
     }
  
-    void UpdateMove()
+    public void UpdateMove()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, ground);
- 
-        Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        targetDir.Normalize();
- 
-        currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);
- 
-        velocityY += gravity * 2f * Time.deltaTime;
- 
-        Vector3 velocity = (transform.forward * currentDir.y + transform.right * currentDir.x) * Speed + Vector3.up * velocityY;
- 
-        controller.Move(velocity * Time.deltaTime);
- 
-        if (isGrounded && Input.GetButtonDown("Jump"))
+
+        // Only proceed with movement if isMovementEnabled is true
+        if (checksMovement)
         {
-            velocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
- 
-        if(isGrounded! && controller.velocity.y < -1f)
-        {
-            velocityY = -8f;
+            Vector2 targetDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            targetDir.Normalize();
+
+            currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);
+
+            velocityY += gravity * 2f * Time.deltaTime;
+
+            Vector3 velocity = (transform.forward * currentDir.y + transform.right * currentDir.x) * Speed + Vector3.up * velocityY;
+
+            controller.Move(velocity * Time.deltaTime);
+
+            if (isGrounded && Input.GetButtonDown("Jump"))
+            {
+                velocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
+
+            if (isGrounded! && controller.velocity.y < -1f)
+            {
+                velocityY = -8f;
+            }
         }
     }
 }
 
 //video https://www.youtube.com/watch?v=yl2Tv72tV7U
+
+// Movement check sourse: ChatGPT

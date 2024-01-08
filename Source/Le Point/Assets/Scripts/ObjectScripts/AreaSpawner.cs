@@ -44,7 +44,7 @@ public class AreaSpawner : MonoBehaviour
             Random.Range(-size.y / 2, size.y / 2),
             Random.Range(-size.z / 2, size.z / 2)
         );
-        Debug.Log(pos);
+        //Debug.Log(pos);
         return pos;
     }
 

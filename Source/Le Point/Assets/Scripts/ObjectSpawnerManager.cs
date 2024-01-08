@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class ObjectSpawnerManager : MonoBehaviour
 {
@@ -22,8 +23,13 @@ public class ObjectSpawnerManager : MonoBehaviour
     public GameObject GameOverScreen;
 
     public GameObject spawnArea;
+    public GameObject spawnArea2;
+    public GameObject spawnArea3;
+    public GameObject teleporter;
 
     private float maxObjectsTimer = 0f;
+
+    private Movement playerMovement;
 
     // Start is called before the first frame update
     void Start()
@@ -35,9 +41,18 @@ public class ObjectSpawnerManager : MonoBehaviour
         // Start spawning objects
         StartCoroutine(TargetDrop());
 
+        // Changes the GameState
         GameStateManager.Instance.OnGameStateChanged += onGameStateChanged;
+
+        // Assuming the Movement script is on the player object
+        playerMovement = FindObjectOfType<Movement>();
+        if (playerMovement == null)
+        {
+            Debug.LogError("Movement script not found on player object.");
+        }
     }
 
+        // Destroys the previous GameState
     private void OnDestroy()
     {
         GameStateManager.Instance.OnGameStateChanged -= onGameStateChanged;
@@ -56,11 +71,17 @@ public class ObjectSpawnerManager : MonoBehaviour
             {
                 if (targetCount < maxObjects)
                 {
-                    // Get a random position within the specified range using TargetArea from AreaSpawner
-                    Vector3 spawnPosition = AreaSpawner.Instance.TargetArea();
-
                     // Determine the object to spawn based on the player's score
                     GameObject spawnedObject = GetSpawnedObject();
+
+                    // If GetSpawnedObject returns null, stop spawning targets
+                    if (spawnedObject == null)
+                    {
+                        yield break;
+                    }
+
+                    // Get a random position within the specified range using TargetArea from AreaSpawner
+                    Vector3 spawnPosition = AreaSpawner.Instance.TargetArea();
 
                     // Instantiate and set the container as the parent
                     GameObject instantiatedObject = Instantiate(spawnedObject, spawnPosition, Quaternion.identity);
@@ -104,6 +125,7 @@ public class ObjectSpawnerManager : MonoBehaviour
             else
             {
                 maxObjectsTimer = 0f; // Reset the timer if targetCount is less than maxObjects
+                GameOverScreen.SetActive(false);
             }
         }
     }
@@ -144,8 +166,24 @@ public class ObjectSpawnerManager : MonoBehaviour
 
     GameObject GetSpawnedObject()
     {
+        if (ScoreManager.scoreCount == 25 && TargetM != null)
+        {
+            Debug.Log("Score is 25 or higher, no targets will spawn.");
 
-        if (ScoreManager.scoreCount >= 20 && TargetS != null)
+            spawnArea.SetActive(false);
+            spawnArea2.SetActive(true);
+
+            Debug.Log("Teleporter is active");
+            teleporter.SetActive(true); // Activate the teleporter
+
+            // Enable player movement
+            playerMovement.EnableMovement();
+
+            return null;
+        }
+
+        // Your existing logic for selecting targets based on score
+        if (ScoreManager.scoreCount >= 30 && TargetS != null)
         {
             Debug.Log("Selected TargetS");
             maxObjects = maxObjectsTargetS; // Change maxObjects for TargetS
@@ -156,12 +194,24 @@ public class ObjectSpawnerManager : MonoBehaviour
         {
             Debug.Log("Selected TargetM");
             maxObjects = maxObjectsTargetM; // Change maxObjects for TargetM
+
             return TargetM;
         }
         else
         {
+            spawnArea.SetActive(true);
             Debug.Log("Selected TargetL");
             maxObjects = maxObjectsTagetL; // Reset maxObjects of maxObjectsTargetL
+
+            Debug.Log("Teleporter is not active");
+            teleporter.SetActive(false); // Deactivate the teleporter
+
+            // Disable player movement
+            if (playerMovement != null)
+            {
+                playerMovement.DisableMovement();
+            }
+
             return TargetL;
         }
     }
