@@ -29,7 +29,7 @@ public class Movement : MonoBehaviour
     Vector2 currentDirVelocity;
     Vector3 velocity;
 
-    public static bool checksMovement = false; // Variable to track if movement is enabled
+    public static bool checksMovement = true; // Variable to track if movement is enabled
 
     void Start()
     {
