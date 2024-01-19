@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask mask;
     public ObjectSpawnerManager spawnerManager; // Reference to ObjectSpawnerManager
 
-    private float deactivationDelay = 0.2f; // Adjust the delay duration as needed
+    [SerializeField] float deactivationDelay = 0.2f; // Adjust the delay duration as needed
 
     // Start is called before the first frame update
     void Start()

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Clicked
   - ResetHiScore
+  - SpawnArea
+  - SpawnArea2
+  - SpawnArea3
   layers:
   - Default
   - TransparentFX

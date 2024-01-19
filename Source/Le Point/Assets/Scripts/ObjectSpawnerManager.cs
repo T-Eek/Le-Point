@@ -5,31 +5,24 @@ using UnityEngine.InputSystem.XR;
 
 public class ObjectSpawnerManager : MonoBehaviour
 {
+    [SerializeField] GameObject[] Targets;
+    [SerializeField] GameObject[] spawnAreas;
 
-    
-    public GameObject TargetL; // The object prefab to spawn initially untile the next target spawns
-    public GameObject TargetM; // The object prefab to spawn after reaching a score of 25
-    public GameObject TargetS; // The object prefab to spawn after reaching a score of 50
     private int targetCount; // each target GameObject
-    public int maxObjects = 1; // Default maximum number of spawned objects
-    public static int maxObjectsTagetL = 10; // Maximum number of spawned objects for TargetL
-    public static int maxObjectsTargetM = 10; // Maximum number of spawned objects for TargetM
-    public static int maxObjectsTargetS = 5; // Maximum number of spawned objects for TargetS
+    public int maxObjects = 0; // Default maximum number of spawned objects
+    public static int maxObjectsTargetL = 25; // Maximum number of spawned objects for TargetL
+    public static int maxObjectsTargetM = 15; // Maximum number of spawned objects for TargetM
+    public static int maxObjectsTargetS = 10; // Maximum number of spawned objects for TargetS
     private float spawnDelay = 0.5f; // Initial default spawn delay between the spawned target GameObjects
     private float decayTime = 3.5f; // The set time when all target GameObjects are destoryed to show the Game Over Screen
+    private float maxObjectsTimer = 0f;
     public static float decayTargetTime = 1f; // The time before spawned objects are being destroyed
 
     private Transform objectsContainer; // Container to store spawned objects (set in the Unity Editor)
-    public GameObject GameOverScreen;
+    [SerializeField] GameObject GameOverScreen;
+    [SerializeField] GameObject teleporter;
 
-    public GameObject spawnArea;
-    public GameObject spawnArea2;
-    public GameObject spawnArea3;
-    public GameObject teleporter;
-
-    private float maxObjectsTimer = 0f;
-
-    private Movement playerMovement;
+    //private Movement playerMovement;
 
     // Start is called before the first frame update
     void Start()
@@ -39,31 +32,26 @@ public class ObjectSpawnerManager : MonoBehaviour
         objectsContainer = new GameObject("LeTargetContainer").transform;
 
         // Start spawning objects
-        StartCoroutine(TargetDrop());
+        StartCoroutine(targetSpawner());
 
         // Changes the GameState
         GameStateManager.Instance.OnGameStateChanged += onGameStateChanged;
 
         // Assuming the Movement script is on the player object
-        playerMovement = FindObjectOfType<Movement>();
+        /*playerMovement = FindObjectOfType<Movement>();
         if (playerMovement == null)
         {
             Debug.LogError("Movement script not found on player object.");
-        }
+        }*/
     }
 
-        // Destroys the previous GameState
+    // Destroys the previous GameState
     private void OnDestroy()
     {
         GameStateManager.Instance.OnGameStateChanged -= onGameStateChanged;
     }
 
-    private void Update()
-    {
-        //
-    }
-
-    IEnumerator TargetDrop()
+    IEnumerator targetSpawner()
     {
         while (true)
         {
@@ -81,7 +69,7 @@ public class ObjectSpawnerManager : MonoBehaviour
                     }
 
                     // Get a random position within the specified range using TargetArea from AreaSpawner
-                    Vector3 spawnPosition = AreaSpawner.Instance.TargetArea();
+                    Vector3 spawnPosition = GetSpawnAreas();
 
                     // Instantiate and set the container as the parent
                     GameObject instantiatedObject = Instantiate(spawnedObject, spawnPosition, Quaternion.identity);
@@ -92,20 +80,30 @@ public class ObjectSpawnerManager : MonoBehaviour
 
 
                     // Change spawn delay based on the spawned object
-                    if (spawnedObject == TargetM)
+                    if (spawnedObject == Targets[0] && ScoreManager.scoreCount == 5)
                     {
                         spawnDelay = 0.8f;
                         StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
 
                     }
-                    else if (spawnedObject == TargetS)
+                    else if (spawnedObject == Targets[0] && ScoreManager.scoreCount == 15)
                     {
                         spawnDelay = 0.4f;
                         StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
                     }
+                    else if (spawnedObject == Targets[1] && ScoreManager.scoreCount == 30)
+                    {
+                        spawnDelay = 0.8f;
+                        StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
+                    }
+                    else if (spawnedObject == Targets[1] && ScoreManager.scoreCount == 40)
+                    {
+                        spawnDelay = 0.3f;
+                        StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
+                    }
                     else
                     {
-                        spawnDelay = 1.5f; // Reset to default if spawning TargetL
+                        spawnDelay = 1.5f; // Reset to default if spawning Targets
                         StartCoroutine(DestroyAfterDelay(instantiatedObject, decayTime));
                     }
                 }
@@ -117,7 +115,7 @@ public class ObjectSpawnerManager : MonoBehaviour
                 maxObjectsTimer += spawnDelay;
                 if (maxObjectsTimer >= 5f)
                 {
-                    
+
                     GameOverScreen.SetActive(true);
                     yield break; // exit the coroutine
                 }
@@ -150,6 +148,7 @@ public class ObjectSpawnerManager : MonoBehaviour
         // Check if the object is null before attempting to deactivate and destroy it
         if (target != null)
         {
+            yield return new WaitForSeconds(delay);
             target.SetActive(false);
 
             // Start a coroutine to destroy the object after a delay of 1 second
@@ -164,56 +163,104 @@ public class ObjectSpawnerManager : MonoBehaviour
         }
     }
 
+    // Function to determine the spawned target based on the player's score
     GameObject GetSpawnedObject()
     {
-        if (ScoreManager.scoreCount == 25 && TargetM != null)
+        if (ScoreManager.scoreCount >= 100)
         {
-            Debug.Log("Score is 25 or higher, no targets will spawn.");
-
-            spawnArea.SetActive(false);
-            spawnArea2.SetActive(true);
-
+            Debug.Log("Selected TargetL");
             Debug.Log("Teleporter is active");
             teleporter.SetActive(true); // Activate the teleporter
-
-            // Enable player movement
-            playerMovement.EnableMovement();
-
+            //playerMovement.EnableMovement();
+            Debug.Log("Score is 100 or higher, no targets will spawn.");
             return null;
         }
-
+        else if (ScoreManager.scoreCount >= 25)
+        {
+            Debug.Log("Selected TargetL");
+            Debug.Log("Teleporter is active");
+            teleporter.SetActive(true); // Activate the teleporter
+            Debug.Log("Score is 25 or higher, TargetM will spawn.");
+            maxObjects = maxObjectsTargetM; // Reset maxObjects of maxObjectsTargetM
+            return Targets[1];
+        }
+        else if (ScoreManager.scoreCount >= 50) // Deactivates the teleporter
+        {
+            Debug.Log("Selected TargetL");
+            Debug.Log("Teleporter is active");
+            teleporter.SetActive(true); // Activate the teleporter
+            Debug.Log("Score is 50 or higher, TargetS will spawn.");
+            maxObjects = maxObjectsTargetS; // Reset maxObjects of maxObjectsTargetS
+            return Targets[2];
+        }
         // Your existing logic for selecting targets based on score
-        if (ScoreManager.scoreCount >= 30 && TargetS != null)
+        /*if (ScoreManager.scoreCount >= 20 && TargetL != null)
         {
             Debug.Log("Selected TargetS");
-            maxObjects = maxObjectsTargetS; // Change maxObjects for TargetS
-
-            return TargetS;
-        }
-        else if (ScoreManager.scoreCount >= 10 && TargetM != null)
-        {
-            Debug.Log("Selected TargetM");
-            maxObjects = maxObjectsTargetM; // Change maxObjects for TargetM
-
-            return TargetM;
-        }
-        else
-        {
-            spawnArea.SetActive(true);
-            Debug.Log("Selected TargetL");
-            maxObjects = maxObjectsTagetL; // Reset maxObjects of maxObjectsTargetL
-
-            Debug.Log("Teleporter is not active");
-            teleporter.SetActive(false); // Deactivate the teleporter
-
-            // Disable player movement
-            if (playerMovement != null)
-            {
-                playerMovement.DisableMovement();
-            }
+            maxObjects = maxObjectsTargetL; // Change maxObjects for TargetS
 
             return TargetL;
         }
+        else if (ScoreManager.scoreCount >= 10 && TargetL != null)
+        {
+            Debug.Log("Selected TargetM");
+            maxObjects = maxObjectsTargetL; // Change maxObjects for TargetM
+
+            return TargetL;
+        }*/
+        else
+        {
+            Debug.Log("Selected TargetL");
+            maxObjects = maxObjectsTargetL; // Reset maxObjects of maxObjectsTargetL
+
+            Debug.Log("Teleporter is not active");
+            teleporter.SetActive(false); // Deactivate the teleporter
+            //playerMovement.DisableMovement();
+
+            return Targets[0];
+        }
+    }
+
+    // Function to get the spawn position based on the player's score
+    Vector3 GetSpawnAreas()
+    {
+        if (ScoreManager.scoreCount < 25 && spawnAreas[0] != null)
+        {
+            AreaSpawner areaSpawnerPos = spawnAreas[0].GetComponent<AreaSpawner>();
+
+            if (areaSpawnerPos != null)
+            {
+                Debug.Log("Spawn area" + spawnAreas[0]);
+                return areaSpawnerPos.TargetArea(); // Return the position for the first spawn area
+            }
+        }
+        else if (ScoreManager.scoreCount < 50 && spawnAreas[1] != null)
+        {
+            AreaSpawner2 areaSpawnerPos = spawnAreas[1].GetComponent<AreaSpawner2>();
+
+            if (areaSpawnerPos != null)
+            {
+                Debug.Log("Spawn area" + spawnAreas[1]);
+                return areaSpawnerPos.TargetArea(); // Return the position for the second spawn area
+            }
+        }
+        else if (ScoreManager.scoreCount >= 50 && spawnAreas[2] != null)
+        {
+            AreaSpawner3 areaSpawnerPos = spawnAreas[2].GetComponent<AreaSpawner3>();
+
+            if (areaSpawnerPos != null)
+            {
+                Debug.Log("Spawn area" + spawnAreas[2]);
+                return areaSpawnerPos.TargetArea(); // Return the position for the third spawn area
+            }
+        }
+        else
+        {
+            Debug.LogError("Spawn area 0 is null.");
+            return Vector3.zero;
+        }
+        
+        return Vector3.zero; // Handle the case where spawnAreas[0] is null (return another default position or handle as needed)
     }
 
     // Call this method when the player interacts with an object
