@@ -1,24 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using UnityEngine.InputSystem.XR;
 
-public class AreaSpawner : MonoBehaviour
+public class AreaSpawner3 : MonoBehaviour
 {
     public Vector3 center; // TargetArea parameters
     public Vector3 size; // TargetArea parameters
     public UnityEngine.Color gizmoColor = new Color(0, 1, 0, 0.5f);
 
-    private static AreaSpawner instance; // allows you to connnect other script to it
+    private static AreaSpawner3 instance; // allows you to connnect other script to it
 
     // Singleton pattern to make the script accessible from other scripts
-    public static AreaSpawner Instance // An instance to ObjectSpawnerManager
+    public static AreaSpawner3 Instance // An instance to ObjectSpawnerManager
     {
         get
         {
             if (instance == null)
             {
-                instance = FindObjectOfType<AreaSpawner>();
+                instance = FindObjectOfType<AreaSpawner3>();
             }
             Debug.Log("Instance found");
             return instance;
