@@ -1,32 +1,46 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class teleport : MonoBehaviour
 {
     public Transform player, destination;
     public GameObject playerg;
-
+    public AudioClip teleportSound;
+    private AudioSource audioSource;
     private Movement movementScript;
+    private bool hasPlayedSound = false;
 
-    // Ensure that the Movement script is set in the Unity Editor
     void Start()
     {
         movementScript = player.GetComponent<Movement>();
+        audioSource = GetComponent<AudioSource>();
     }
 
-  void OnTriggerEnter(Collider other){
-  if(other.CompareTag("Player")){
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && !hasPlayedSound)
+        {
+            if (teleportSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(teleportSound);
+                hasPlayedSound = true;
+                StartCoroutine(StopSoundAfterDelay(1.0f)); // Change 2.0f to the duration you want
+            }
 
-   playerg.SetActive(false);
-   player.position = destination.position;
-   playerg.SetActive(true);
+            playerg.SetActive(false);
+            player.position = destination.position;
+            playerg.SetActive(true);
 
-   
-   if (movementScript != null) // Disable player movement after teleporting
-   {
-     movementScript.DisableMovement(); // Disable movement
-   }
-  }
- }
+            if (movementScript != null)
+            {
+                movementScript.DisableMovement();
+            }
+        }
+    }
+
+    IEnumerator StopSoundAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        audioSource.Stop();
+    }
 }
