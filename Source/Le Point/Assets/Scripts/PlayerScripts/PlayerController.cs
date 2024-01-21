@@ -1,32 +1,37 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-//using UnityEngine.InputSystem;
-using TMPro;
-//using static UnityEditor.Timeline.TimelinePlaybackControls;
+
+[System.Serializable]
+public class ScoreSound
+{
+    public int scoreNumber;
+    public AudioClip sound;
+}
 
 public class PlayerController : MonoBehaviour
 {
-
     Camera cam;
-    private RayCastController rayCastController; // Reference to RayCastController
+    private RayCastController rayCastController;
     public LayerMask mask;
-    public ObjectSpawnerManager spawnerManager; // Reference to ObjectSpawnerManager
+    public ObjectSpawnerManager spawnerManager;
 
-    [SerializeField] float deactivationDelay = 0.2f; // Adjust the delay duration as needed
+    public ScoreSound[] scoreSounds;
+    private AudioSource audioSource;
 
-    // Start is called before the first frame update
+    private float deactivationDelay = 0.2f;
+
     void Start()
     {
-        rayCastController = GetComponent<RayCastController>(); // Get the reference to RayCastController
+        rayCastController = GetComponent<RayCastController>();
         cam = Camera.main;
         GameStateManager.Instance.OnGameStateChanged += OnGameStateChanged;
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
     }
 
     void OnDestroy()
     {
-        //prevent memory leaks and errors after it being destroyed
         GameStateManager.Instance.OnGameStateChanged -= OnGameStateChanged;
     }
 
@@ -39,17 +44,13 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(deactivationDelay);
         obj.SetActive(false);
-        spawnerManager.OnObjectHit(); // Inform the ObjectSpawnerManager that an object was hit & spawns a new object
-
+        spawnerManager.OnObjectHit();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        rayCastController.HandleRaycast(mask); // Use RayCastController for raycasting
+        rayCastController.HandleRaycast(mask);
 
-        // Your additional logic specific to PlayerController
-        // For example, handle additional behavior on mouse click
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -70,8 +71,22 @@ public class PlayerController : MonoBehaviour
                             {
                                 StartCoroutine(DeactivateObjectAfterDelay(hit.transform.gameObject));
                                 ScoreManager.scoreCount++;
+
+                                // Check if the current score has a corresponding sound
+                                foreach (ScoreSound scoreSound in scoreSounds)
+                                {
+                                    if (scoreSound.scoreNumber == ScoreManager.scoreCount)
+                                    {
+                                        // Play the audio clip for the current score
+                                        if (audioSource != null && scoreSound.sound != null)
+                                        {
+                                            audioSource.clip = scoreSound.sound;
+                                            audioSource.Play();
+                                        }
+                                    }
+                                }
+
                                 spawnerManager.OnObjectHit();
-                                // Debug.Log(obj.name + " is hit successfully");
                             }
                         }
                     }
@@ -79,8 +94,4 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-
 }
-
-
