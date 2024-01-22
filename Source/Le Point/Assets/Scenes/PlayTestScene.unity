@@ -1118,6 +1118,7 @@ MonoBehaviour:
   maxObjects: 10
   GameOverScreen: {fileID: 3402575156669731324}
   teleporter: {fileID: 830708663}
+  teleporter2: {fileID: 1620975579}
 --- !u!1001 &381070991
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3231,7 +3232,7 @@ PrefabInstance:
     - target: {fileID: 4951243213722488206, guid: 09f7b86bab708484aba8addd3f01d71f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.919
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4951243213722488206, guid: 09f7b86bab708484aba8addd3f01d71f,
         type: 3}
@@ -3246,17 +3247,17 @@ PrefabInstance:
     - target: {fileID: 4951243213722488206, guid: 09f7b86bab708484aba8addd3f01d71f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4951243213722488206, guid: 09f7b86bab708484aba8addd3f01d71f,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4951243213722488206, guid: 09f7b86bab708484aba8addd3f01d71f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4951243213722488206, guid: 09f7b86bab708484aba8addd3f01d71f,
         type: 3}
@@ -4289,6 +4290,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4102051430634892114, guid: 69742543b6e4dd04e90589b5d53a5afc,
     type: 3}
   m_PrefabInstance: {fileID: 1484339598}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1620975579 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3212328996700182305, guid: 8862b9f700158c44b87a76c74b4c2c61,
+    type: 3}
+  m_PrefabInstance: {fileID: 2049998333}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1658471956
 GameObject:
@@ -5695,7 +5702,7 @@ PrefabInstance:
     - target: {fileID: 3212328996700182305, guid: 8862b9f700158c44b87a76c74b4c2c61,
         type: 3}
       propertyPath: m_Name
-      value: teleport (1)
+      value: teleport2
       objectReference: {fileID: 0}
     - target: {fileID: 3212328996700182305, guid: 8862b9f700158c44b87a76c74b4c2c61,
         type: 3}
