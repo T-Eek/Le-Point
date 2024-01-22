@@ -21,8 +21,9 @@ public class ObjectSpawnerManager : MonoBehaviour
     private Transform objectsContainer; // Container to store spawned objects (set in the Unity Editor)
     [SerializeField] GameObject GameOverScreen;
     [SerializeField] GameObject teleporter;
+    [SerializeField] GameObject teleporter2;
 
-    //private Movement playerMovement;
+    private Movement playerMovement;
 
     // Start is called before the first frame update
     void Start()
@@ -38,11 +39,11 @@ public class ObjectSpawnerManager : MonoBehaviour
         GameStateManager.Instance.OnGameStateChanged += onGameStateChanged;
 
         // Assuming the Movement script is on the player object
-        /*playerMovement = FindObjectOfType<Movement>();
+        playerMovement = FindObjectOfType<Movement>();
         if (playerMovement == null)
         {
             Debug.LogError("Movement script not found on player object.");
-        }*/
+        }
     }
 
     // Destroys the previous GameState
@@ -168,55 +169,55 @@ public class ObjectSpawnerManager : MonoBehaviour
     {
         if (ScoreManager.scoreCount >= 100)
         {
-            Debug.Log("Selected TargetL");
-            Debug.Log("Teleporter is active");
-            teleporter.SetActive(true); // Activate the teleporter
-            //playerMovement.EnableMovement();
             Debug.Log("Score is 100 or higher, no targets will spawn.");
+            playerMovement.DisableMovement(); // Deactivate the movement of the player
             return null;
         }
-        else if (ScoreManager.scoreCount >= 25)
+        else if (ScoreManager.scoreCount > 50)
         {
-            Debug.Log("Selected TargetL");
             Debug.Log("Teleporter is active");
-            teleporter.SetActive(true); // Activate the teleporter
+            teleporter2.SetActive(false); // Deactivate the teleporter
+            playerMovement.DisableMovement(); // Deactivate the movement of the player
+
             Debug.Log("Score is 25 or higher, TargetM will spawn.");
             maxObjects = maxObjectsTargetM; // Reset maxObjects of maxObjectsTargetM
-            return Targets[1];
-        }
-        else if (ScoreManager.scoreCount >= 50) // Deactivates the teleporter
-        {
-            Debug.Log("Selected TargetL");
-            Debug.Log("Teleporter is active");
-            teleporter.SetActive(true); // Activate the teleporter
-            Debug.Log("Score is 50 or higher, TargetS will spawn.");
-            maxObjects = maxObjectsTargetS; // Reset maxObjects of maxObjectsTargetS
             return Targets[2];
         }
-        // Your existing logic for selecting targets based on score
-        /*if (ScoreManager.scoreCount >= 20 && TargetL != null)
+        else if (ScoreManager.scoreCount == 50)
         {
-            Debug.Log("Selected TargetS");
-            maxObjects = maxObjectsTargetL; // Change maxObjects for TargetS
+            Debug.Log("Teleporter is active");
+            teleporter2.SetActive(true); // Activate the teleporter
+            playerMovement.EnableMovement(); // Activate the movement of the player
 
-            return TargetL;
+            Debug.Log("Score is 25 or higher, TargetM will spawn.");
+            maxObjects = maxObjectsTargetM; // Reset maxObjects of maxObjectsTargetM
+            return Targets[2];
         }
-        else if (ScoreManager.scoreCount >= 10 && TargetL != null)
+        else if (ScoreManager.scoreCount > 25)
         {
-            Debug.Log("Selected TargetM");
-            maxObjects = maxObjectsTargetL; // Change maxObjects for TargetM
+            teleporter.SetActive(false); // Deactivate the teleporter
+            playerMovement.DisableMovement(); // Deactivate the movement of the player
 
-            return TargetL;
-        }*/
+            Debug.Log("Score is 50 or higher, TargetS will spawn.");
+            maxObjects = maxObjectsTargetS; // Reset maxObjects of maxObjectsTargetS
+            return Targets[1];
+        }
+        else if (ScoreManager.scoreCount == 25)
+        {
+            Debug.Log("Teleporter is active");
+            teleporter.SetActive(true); // Activate the teleporter
+            playerMovement.EnableMovement(); // Activate the movement of the player
+
+            Debug.Log("Score is 50 or higher, TargetS will spawn.");
+            maxObjects = maxObjectsTargetL; // Reset maxObjects of maxObjectsTargetS
+            return Targets[0];
+        }
         else
         {
-            Debug.Log("Selected TargetL");
+            Debug.Log("Score is 0 or higher, TargetL will spawn.");
             maxObjects = maxObjectsTargetL; // Reset maxObjects of maxObjectsTargetL
 
-            Debug.Log("Teleporter is not active");
             teleporter.SetActive(false); // Deactivate the teleporter
-            //playerMovement.DisableMovement();
-
             return Targets[0];
         }
     }
