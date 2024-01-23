@@ -39,8 +39,6 @@ public class HighScoreManager : MonoBehaviour
             PlayerPrefs.SetInt("HighScore", hiScoreCount);
         }
         UpdateScore();
-        // Log the current high score and username to the console
-        Debug.Log("Current High Score: " + hiScoreCount);
     }
 
     void UpdateScore()

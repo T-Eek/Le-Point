@@ -23,8 +23,6 @@ public class ObjectSpawnerManager : MonoBehaviour
     [SerializeField] GameObject teleporter;
     [SerializeField] GameObject teleporter2;
 
-    private Movement playerMovement;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -37,13 +35,6 @@ public class ObjectSpawnerManager : MonoBehaviour
 
         // Changes the GameState
         GameStateManager.Instance.OnGameStateChanged += onGameStateChanged;
-
-        // Assuming the Movement script is on the player object
-        playerMovement = FindObjectOfType<Movement>();
-        if (playerMovement == null)
-        {
-            Debug.LogError("Movement script not found on player object.");
-        }
     }
 
     // Destroys the previous GameState
@@ -77,8 +68,6 @@ public class ObjectSpawnerManager : MonoBehaviour
                     instantiatedObject.transform.parent = objectsContainer;
 
                     targetCount++;
-                    //Debug.Log($"Spawned: {spawnedObject.name} {""} {targetCount} at position: {spawnPosition}");
-
 
                     // Change spawn delay based on the spawned object
                     if (spawnedObject == Targets[0] && ScoreManager.scoreCount == 5)
@@ -169,54 +158,35 @@ public class ObjectSpawnerManager : MonoBehaviour
     {
         if (ScoreManager.scoreCount >= 100)
         {
-            Debug.Log("Score is 100 or higher, no targets will spawn.");
-            playerMovement.DisableMovement(); // Deactivate the movement of the player
             return null;
         }
         else if (ScoreManager.scoreCount > 50)
         {
-            Debug.Log("Teleporter is active");
             teleporter2.SetActive(false); // Deactivate the teleporter
-            playerMovement.DisableMovement(); // Deactivate the movement of the player
-
-            Debug.Log("Score is 25 or higher, TargetM will spawn.");
             maxObjects = maxObjectsTargetM; // Reset maxObjects of maxObjectsTargetM
             return Targets[2];
         }
         else if (ScoreManager.scoreCount == 50)
         {
-            Debug.Log("Teleporter is active");
             teleporter2.SetActive(true); // Activate the teleporter
-            playerMovement.EnableMovement(); // Activate the movement of the player
-
-            Debug.Log("Score is 25 or higher, TargetM will spawn.");
             maxObjects = maxObjectsTargetM; // Reset maxObjects of maxObjectsTargetM
             return Targets[2];
         }
         else if (ScoreManager.scoreCount > 25)
         {
             teleporter.SetActive(false); // Deactivate the teleporter
-            playerMovement.DisableMovement(); // Deactivate the movement of the player
-
-            Debug.Log("Score is 50 or higher, TargetS will spawn.");
             maxObjects = maxObjectsTargetS; // Reset maxObjects of maxObjectsTargetS
             return Targets[1];
         }
         else if (ScoreManager.scoreCount == 25)
         {
-            Debug.Log("Teleporter is active");
             teleporter.SetActive(true); // Activate the teleporter
-            playerMovement.EnableMovement(); // Activate the movement of the player
-
-            Debug.Log("Score is 50 or higher, TargetS will spawn.");
             maxObjects = maxObjectsTargetL; // Reset maxObjects of maxObjectsTargetS
             return Targets[0];
         }
         else
         {
-            Debug.Log("Score is 0 or higher, TargetL will spawn.");
             maxObjects = maxObjectsTargetL; // Reset maxObjects of maxObjectsTargetL
-
             teleporter.SetActive(false); // Deactivate the teleporter
             return Targets[0];
         }
@@ -231,7 +201,6 @@ public class ObjectSpawnerManager : MonoBehaviour
 
             if (areaSpawnerPos != null)
             {
-                Debug.Log("Spawn area" + spawnAreas[0]);
                 return areaSpawnerPos.TargetArea(); // Return the position for the first spawn area
             }
         }
@@ -241,7 +210,6 @@ public class ObjectSpawnerManager : MonoBehaviour
 
             if (areaSpawnerPos != null)
             {
-                Debug.Log("Spawn area" + spawnAreas[1]);
                 return areaSpawnerPos.TargetArea(); // Return the position for the second spawn area
             }
         }
@@ -251,13 +219,11 @@ public class ObjectSpawnerManager : MonoBehaviour
 
             if (areaSpawnerPos != null)
             {
-                Debug.Log("Spawn area" + spawnAreas[2]);
                 return areaSpawnerPos.TargetArea(); // Return the position for the third spawn area
             }
         }
         else
         {
-            Debug.LogError("Spawn area 0 is null.");
             return Vector3.zero;
         }
         

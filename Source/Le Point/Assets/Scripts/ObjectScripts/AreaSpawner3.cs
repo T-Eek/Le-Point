@@ -20,7 +20,6 @@ public class AreaSpawner3 : MonoBehaviour
             {
                 instance = FindObjectOfType<AreaSpawner3>();
             }
-            Debug.Log("Instance found");
             return instance;
         }
     }
@@ -39,13 +38,11 @@ public class AreaSpawner3 : MonoBehaviour
 
     public Vector3 TargetArea()
     {
-        Debug.Log("pos found");
         Vector3 pos = center + new Vector3(
             Random.Range(-size.x / 2, size.x / 2),
             Random.Range(-size.y / 2, size.y / 2),
             Random.Range(-size.z / 2, size.z / 2)
         );
-        Debug.Log(pos);
         return pos;
     }
 
