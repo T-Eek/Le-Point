@@ -435,12 +435,12 @@ PrefabInstance:
         type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 340094902}
     - target: {fileID: 5582750501510434755, guid: 8862b9f700158c44b87a76c74b4c2c61,
         type: 3}
       propertyPath: playerg
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1002484296}
     - target: {fileID: 5582750501510434755, guid: 8862b9f700158c44b87a76c74b4c2c61,
         type: 3}
       propertyPath: teleportSound
@@ -1227,12 +1227,17 @@ PrefabInstance:
         type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 340094902}
     - target: {fileID: 5582750501510434755, guid: 8862b9f700158c44b87a76c74b4c2c61,
         type: 3}
       propertyPath: playerg
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1002484296}
+    - target: {fileID: 5582750501510434755, guid: 8862b9f700158c44b87a76c74b4c2c61,
+        type: 3}
+      propertyPath: teleportSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 37159e632bcee2b4eb40bacfcd2eeb35, type: 3}
     - target: {fileID: 6223247275286913203, guid: 8862b9f700158c44b87a76c74b4c2c61,
         type: 3}
       propertyPath: m_LocalScale.x
